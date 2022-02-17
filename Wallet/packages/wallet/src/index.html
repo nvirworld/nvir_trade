@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="shortcut icon" href="../public/favicon-32x32.png">
+<!-- https://github.com/faurelia/simple-modal-view -->
+<link href="../public/modal.css" rel="stylesheet">
+
+<title>Wallet Test</title>
+</head>
+<body>
+
+<button id="wallet" data-target="wallet_choose" data-toggle="modal">Wallet</button>
+<button id="wallet_disconnect">Disconnect</button><br>
+
+<label>Connected Wallet</label><input type="text" id="wallet_type"><br>
+<label>Connected Address</label><input type="text" id="account"><br>
+<a id="deeplink">Metamask deep link</a><br>
+<label>Mobile Browser</label><input type="text" id="mobile"><br>
+
+<label>Message to sign</label><input type="text" id="msg_to_sign"><br>
+<label>Signature</label><input type="text" id="signature"><br>
+<button id="personal_sign">Personal Sign</button><br>
+
+<!------------------------------------------------------------------------>
+<!-- modal dialog -->
+<div id="wallet_choose" class="modal">
+	<div class="modal-window">
+		<button id="metamask">Metamask</button>
+		<button id="walletconnect">WalletConnect</button>
+	</div>
+</div>
+
+<!------------------------------------------------------------------------>
+<hr>
+<ul id="debug"></ul>
+
+<!-- modal dialog -->
+<script type="application/javascript" src="../public/modal.js"></script>
+
+<!-- redirect console.log to element -->
+<!--
+<script type="application/javascript" src="//cdn.rawgit.com/Alorel/console-log-html/master/console-log-html.min.js"></script>
+-->
+
+<script>
+
+let W;
+
+window.addEventListener('load', ()=> { //---------------------------------------
+
+// console.log to element
+// ConsoleLogHTML.connect(document.querySelector('#debug'));
+
+const w = wallet.default({url: 'http://192.168.0.80:8088/api'});
+W = w;
+
+document.querySelector('#deeplink').href = w.metamask_deep_link();
+document.querySelector('#mobile').value = `${w.mobile}`;
+
+const btn = {
+	metamask: document.querySelector('#metamask'),
+	walletconnect: document.querySelector('#walletconnect')
+};
+
+
+btn.metamask.onclick = async () => {
+	await w.select_wallet('metamask');
+	await w.connect();
+};
+
+btn.walletconnect.onclick = async () => {
+	await w.select_wallet('walletconnect');
+	await w.connect();
+};
+
+const wallet_disconnect = document.querySelector('#wallet_disconnect');
+wallet_disconnect.onclick = async () => {
+	await w.disconnect();
+}
+
+w.on('unavailable', w => {
+	const b = btn[w.type];
+	b.innerText = `Connect ${w.type}`;
+	document.querySelector('#account').value = '';
+});
+
+w.on('available', (w, accounts) => {
+	document.querySelector('#account').value = accounts[0];
+	document.querySelector('#wallet_type').value = w.type;
+});
+
+//w.start();
+
+//------------------------------------------------------------------------------
+const sign_btn = document.querySelector('#personal_sign');
+const msg_to_sign = document.querySelector('#msg_to_sign');
+const signature = document.querySelector('#signature');
+
+sign_btn.onclick = async () => {
+	signature.value = await w.personal_sign(msg_to_sign.value);
+};
+
+w.on('unavailable', w => {
+	sign_btn.disabled = true;
+});
+
+w.on('available', (w, accounts) => {
+	sign_btn.disabled = false;
+	signature.value = '';
+});
+
+w.start();
+
+}); //--------------------------------------------------------------------------
+
+</script>
+
+</body>
+</html>

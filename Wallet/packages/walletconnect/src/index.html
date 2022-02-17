@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>WalletConnect Test</title>
+</head>
+<body>
+
+<button id="wc">WalletConnect</button><br>
+<label>Connected Address</label><input type="text" id="account"><br>
+<button id="sign">Sign</button>
+
+<script>
+
+let W;
+
+window.addEventListener('load', () => { //--------------------------------------
+
+const w = walletconnect.default({});
+W = w;
+
+const wc = document.querySelector('#wc');
+
+w.on('disconnect', w => {
+	wc.innerText = 'Connect Wallet';
+	document.querySelector('#account').value = '';
+	wc.onclick = async () => {
+		try {
+			await w.connect();
+		}
+		catch (e) {
+			console.error(e);
+		}
+	};
+});
+
+w.on('connect', (w, accounts) => {
+	wc.innerText = 'Disconnect Wallet';
+	document.querySelector('#account').value = accounts[0];
+	wc.onclick = async () => {
+		try {
+			await w.disconnect();
+		}
+		catch (e) {
+			console.error(e);
+		}
+	}
+});
+
+const sign = document.querySelector('#sign');
+sign.onclick = async () => {
+	const account =  document.querySelector('#account').value;
+	const rv = await w.personal_sign(account, 'message to sign');
+	console.dir(rv);
+};
+
+w.start();
+
+}); //--------------------------------------------------------------------------
+
+</script>
+</body>
+</html>

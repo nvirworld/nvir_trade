@@ -1,0 +1,21 @@
+{
+  "name": "wallet-interface",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+	  "bootstrap": "lerna bootstrap",
+	  "build": "lerna run build --scope=@nvirworld/wallet",
+	  "build:dev": "lerna run build:dev --scope=@nvirworld/wallet"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  },
+  "private": true,
+  "workspaces": [
+	  "packages/*"
+  ]
+}
