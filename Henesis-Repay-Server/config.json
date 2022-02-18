@@ -1,0 +1,11 @@
+{
+  "frontend": {
+    "protocol": "https",
+    "port": 9999
+  },
+  "coins": {
+    "PORK": {
+      "id": 1111
+    }
+  }
+}

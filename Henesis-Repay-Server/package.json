@@ -1,0 +1,36 @@
+{
+  "name": "henesis-relay-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "serve": "node ./src",
+    "dev": "nodemon --watch ./src --delay 500ms",
+    "dev:kill": "npx kill-port 9999 && npm run dev",
+    "format": "npx prettier --write \"**/*.{js,json}\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FunnyFig/henesis-relay-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FunnyFig/henesis-relay-server/issues"
+  },
+  "homepage": "https://github.com/FunnyFig/henesis-relay-server#readme",
+  "dependencies": {
+    "@koalex/koa-json-rpc": "^1.0.3",
+    "axios": "^0.25.0",
+    "bignumber.js": "^9.0.2",
+    "dotenv": "^16.0.0",
+    "koa": "^2.13.4",
+    "koa-bodyparser": "^4.3.0",
+    "koa-router": "^10.1.1",
+    "mysql2": "^2.3.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
